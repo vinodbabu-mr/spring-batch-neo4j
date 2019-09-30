@@ -1,30 +1,27 @@
 package com.lowes.interview.model;
 
-import java.util.Date;
-
-import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 
-@NodeEntity
-public class Salesdata {
-	
-	@GraphId
+@NodeEntity(label="Sales")
+public class Sales {
+	@Id
 	private Long orderId;
 	private String region;
 	private String country;
 	private String itemType;
 	private String salesChannel;
 	private String priority;
-	private Date orderDate;
-	private Date shipDate;
+	private String orderDate;
+	private String shipDate;
 	private Integer units;
-	private Float price;
-	private Float cost;
-	private Float totRevenue;
-	private Float totCost;
-	private Float totProfit;
+	private Double price;
+	private Double cost;
+	private Double totRevenue;
+	private Double totCost;
+	private Double totProfit;
 
-	public Salesdata() {
+	public Sales() {
 	}
 
 	public Long getOrderId() {
@@ -75,19 +72,19 @@ public class Salesdata {
 		this.priority = priority;
 	}
 
-	public Date getOrderDate() {
+	public String getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(String orderDate) {
 		this.orderDate = orderDate;
 	}
 
-	public Date getShipDate() {
+	public String getShipDate() {
 		return shipDate;
 	}
 
-	public void setShipDate(Date shipDate) {
+	public void setShipDate(String shipDate) {
 		this.shipDate = shipDate;
 	}
 
@@ -99,50 +96,65 @@ public class Salesdata {
 		this.units = units;
 	}
 
-	public Float getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public Float getCost() {
+	public Double getCost() {
 		return cost;
 	}
 
-	public void setCost(Float cost) {
+	public void setCost(Double cost) {
 		this.cost = cost;
 	}
 
-	public Float getTotRevenue() {
+	public Double getTotRevenue() {
 		return totRevenue;
 	}
 
-	public void setTotRevenue(Float totRevenue) {
+	public void setTotRevenue(Double totRevenue) {
 		this.totRevenue = totRevenue;
 	}
 
-	public Float getTotCost() {
+	public Double getTotCost() {
 		return totCost;
 	}
 
-	public void setTotCost(Float totCost) {
+	public void setTotCost(Double totCost) {
 		this.totCost = totCost;
 	}
 
-	public Float getTotProfit() {
+	public Double getTotProfit() {
 		return totProfit;
 	}
 
-	public void setTotProfit(Float totProfit) {
+	public void setTotProfit(Double totProfit) {
+		this.totProfit = totProfit;
+	}
+
+	public Sales(Long orderId, String region, String country, String itemType, String salesChannel, String priority,
+			String orderDate, String shipDate, Integer units, Double price, Double cost, Double totRevenue, Double totCost,
+			Double totProfit) {
+		super();
+		this.orderId = orderId;
+		this.region = region;
+		this.country = country;
+		this.itemType = itemType;
+		this.salesChannel = salesChannel;
+		this.priority = priority;
+		this.orderDate = orderDate;
+		this.shipDate = shipDate;
+		this.units = units;
+		this.price = price;
+		this.cost = cost;
+		this.totRevenue = totRevenue;
+		this.totCost = totCost;
 		this.totProfit = totProfit;
 	}
 	
 	
-	
-	
-	
-	
-
 }

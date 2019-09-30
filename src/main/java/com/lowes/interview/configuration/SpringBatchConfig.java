@@ -1,14 +1,14 @@
 package com.lowes.interview.configuration;
 
-import javax.sql.DataSource;
+import java.io.File;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -20,25 +20,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.core.io.FileSystemResource;
 
-import com.lowes.interview.model.Salesdata;
+import com.lowes.interview.model.Sales;
 
 @SuppressWarnings("hiding")
 @Configuration
 @EnableBatchProcessing
 @Primary
-public class SpringBatchConfig<Salesdata> {
+public class SpringBatchConfig extends DefaultBatchConfigurer {
 	
-	@SuppressWarnings("unchecked")
 	@Bean
 	public Job job(JobBuilderFactory jobBuilderFactory,
 			StepBuilderFactory stepBuilderFactory,
-			ItemReader<Salesdata> itemReader,
-			ItemWriter<Salesdata> itemWriter) {
+			ItemReader<Sales> itemReader,
+			ItemWriter<Sales> itemWriter) {
 		Step step = stepBuilderFactory.get("File batch")
-				.<Salesdata,Salesdata>chunk(100)
+				.<Sales,Sales>chunk(100)
 				.reader(itemReader)
 				.writer(itemWriter)
 				.build();
@@ -49,9 +47,9 @@ public class SpringBatchConfig<Salesdata> {
 	}
 	
 	@Bean
-	public FlatFileItemReader<Salesdata> itemReader(@Value("${file}") Resource resource) {
-		FlatFileItemReader<Salesdata> reader = new FlatFileItemReader<>();
-		reader.setResource(resource);
+	public FlatFileItemReader<Sales> itemReader(@Value("${file}") File resource) {
+		FlatFileItemReader<Sales> reader = new FlatFileItemReader<>();
+		reader.setResource(new FileSystemResource(resource));
 		reader.setLinesToSkip(1);
 		reader.setName("CSV File Reader");
 		reader.setLineMapper(lineMapper());
@@ -59,16 +57,16 @@ public class SpringBatchConfig<Salesdata> {
 		
 	}
 
-	public LineMapper<Salesdata> lineMapper() {
-		DefaultLineMapper<Salesdata> lineMapper = new DefaultLineMapper<>();
+	public LineMapper<Sales> lineMapper() {
+		DefaultLineMapper<Sales> lineMapper = new DefaultLineMapper<>();
 		DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
 		tokenizer.setDelimiter(",");
 		tokenizer.setStrict(false);
-		tokenizer.setNames(new String[] {"orderId","region","country","country","salesChannel",
+		tokenizer.setNames(new String[] {"orderId","region","country","itemType","salesChannel",
 				"priority","orderDate","shipDate","units","price","cost","totRevenue","totCost","totProfit"});
 		
-		BeanWrapperFieldSetMapper<Salesdata> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-		//fieldSetMapper.setTargetType(Salesdata.class);
+		BeanWrapperFieldSetMapper<Sales> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+		fieldSetMapper.setTargetType(Sales.class);
 		lineMapper.setLineTokenizer(tokenizer);
 		lineMapper.setFieldSetMapper(fieldSetMapper);
 		return lineMapper;
